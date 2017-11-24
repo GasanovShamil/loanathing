@@ -1,17 +1,20 @@
 <?php
-// src/AppBundle/Entity/User.php
+/**
+ * Created by PhpStorm.
+ * User: shgas
+ * Date: 24/11/2017
+ * Time: 12:55
+ */
 
 namespace AppBundle\Entity;
 
-use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="fos_user")
+ * @ORM\Table(name="Items")
  */
-class User extends BaseUser {
-
+class Item {
     /**
      * @ORM\Id
      * @ORM\Column(type="integer")
