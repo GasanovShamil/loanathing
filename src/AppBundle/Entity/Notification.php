@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Notification {
     /**
+     * @var integer
+     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer")
@@ -23,12 +25,23 @@ class Notification {
     private $id;
 
     /**
+     * @var integer
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     private $user;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="isNew", type="boolean")
+     */
+    private $isNew;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="content", type="string")
      */
     private $content;
@@ -36,6 +49,7 @@ class Notification {
     public function __construct() {
         $this->id = 0;
         $this->user = null;
+        $this->isNew = true;
         $this->content = '';
     }
 }

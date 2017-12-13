@@ -14,6 +14,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 class User extends BaseUser {
 
     /**
+     * @var integer
+     *
      * @ORM\Id
      * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
@@ -21,16 +23,22 @@ class User extends BaseUser {
     protected $id;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Announce", mappedBy="owner")
      */
     private $announces;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Notification", mappedBy="user")
      */
     private $notifications;
 
     /**
+     * @var ArrayCollection
+     *
      * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feedback", mappedBy="user")
      */
     private $feedbacks;

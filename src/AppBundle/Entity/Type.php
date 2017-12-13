@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Type {
     /**
+     * @var integer
+     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer")
@@ -23,6 +25,8 @@ class Type {
     private $id;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="label", type="string")
      */
     private $label;

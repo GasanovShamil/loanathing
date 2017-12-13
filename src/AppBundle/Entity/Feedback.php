@@ -16,6 +16,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Feedback {
     /**
+     * @var integer
+     *
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
      * @ORM\Column(name="id", type="integer")
@@ -23,23 +25,31 @@ class Feedback {
     private $id;
 
     /**
+     * @var integer
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
      * @ORM\JoinColumn(name="author", referencedColumnName="id")
      */
     private $author;
 
     /**
+     * @var integer
+     *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
-     * @ORM\JoinColumn(name="user", referencedColumnName="id")
+     * @ORM\JoinColumn(name="target", referencedColumnName="id")
      */
-    private $user;
+    private $target;
 
     /**
+     * @var float
+     *
      * @ORM\Column(name="grade", type="decimal")
      */
     private $grade;
 
     /**
+     * @var string
+     *
      * @ORM\Column(name="comment", type="string")
      */
     private $comment;
@@ -47,7 +57,7 @@ class Feedback {
     public function __construct() {
         $this->id = 0;
         $this->author = null;
-        $this->user = null;
+        $this->target = null;
         $this->grade = null;
         $this->comment = '';
     }
