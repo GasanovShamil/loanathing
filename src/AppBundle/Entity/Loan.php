@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Loans")
+ * @ORM\Table(name="Loan")
  */
 class Loan {
     /**
@@ -35,7 +35,7 @@ class Loan {
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Announce")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Announce", inversedBy="loans")
      * @ORM\JoinColumn(name="announce", referencedColumnName="id")
      */
     private $announce;

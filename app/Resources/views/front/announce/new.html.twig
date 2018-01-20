@@ -1,0 +1,24 @@
+{% extends 'front/base.html.twig' %}
+
+{% block content %}
+    <h1>Announce creation</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <input type="submit" value="Create" />
+    {{ form_end(form) }}
+
+    <ul>
+        <li>
+            <a href="{{ path('announce_index') }}">Back to the list</a>
+        </li>
+    </ul>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('select').material_select();
+        });
+    </script>
+{% endblock %}

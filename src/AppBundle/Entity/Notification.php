@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Notifications")
+ * @ORM\Table(name="Notification")
  */
 class Notification {
     /**
@@ -27,7 +27,7 @@ class Notification {
     /**
      * @var integer
      *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="notifications")
      * @ORM\JoinColumn(name="user", referencedColumnName="id")
      */
     private $user;

@@ -12,7 +12,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="Tags")
+ * @ORM\Table(name="Tag")
  */
 class Tag {
     /**

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Loan A Thing{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link type="text/css" rel="stylesheet" href="assets/css/materialize.min.css" media="screen,projection"/>
+        {% block stylesheets %}{% endblock %}
+    </head>
+
+    <body>
+        {% block navbar %}
+            <nav>
+                NAVBAR
+            </nav>
+        {% endblock %}
+
+        {% block content %}{% endblock %}
+        <script type="text/javascript" src="assets/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="assets/js/materialize.min.js"></script>
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

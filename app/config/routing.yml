@@ -1,3 +1,7 @@
+app_announce:
+    resource: "@AppBundle/Controller/Front/AnnounceController.php"
+    type:     annotation
+
 back:
     resource: '@AppBundle/Controller/Back'
     type: annotation

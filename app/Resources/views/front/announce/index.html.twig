@@ -1,0 +1,45 @@
+{% extends 'front/base.html.twig' %}
+
+{% block content %}
+    <h1>Announces list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Startdate</th>
+                <th>Enddate</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for announce in announces %}
+            <tr>
+                <td><a href="{{ path('announce_show', { 'id': announce.id }) }}">{{ announce.id }}</a></td>
+                <td>{{ announce.name }}</td>
+                <td>{{ announce.description }}</td>
+                <td>{% if announce.startDate %}{{ announce.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{% if announce.endDate %}{{ announce.endDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('announce_show', { 'id': announce.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('announce_edit', { 'id': announce.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('announce_new') }}">Create a new announce</a>
+        </li>
+    </ul>
+{% endblock %}

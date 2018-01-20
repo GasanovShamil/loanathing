@@ -39,7 +39,7 @@ class User extends BaseUser {
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feedback", mappedBy="user")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feedback", mappedBy="target")
      */
     private $feedbacks;
 
