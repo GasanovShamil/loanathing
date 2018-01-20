@@ -56,16 +56,16 @@ class Announce {
     private $description;
 
     /**
-     * @var DateTime
+     * @var string
      *
-     * @ORM\Column(name="startDate", type="datetime")
+     * @ORM\Column(name="startDate", type="string")
      */
     private $startDate;
 
     /**
-     * @var DateTime
+     * @var string
      *
-     * @ORM\Column(name="endDate", type="datetime")
+     * @ORM\Column(name="endDate", type="string")
      */
     private $endDate;
 
@@ -89,8 +89,8 @@ class Announce {
         $this->type = null;
         $this->name = '';
         $this->description = '';
-        $this->startDate = new \Datetime();
-        $this->endDate = new \Datetime();
+        $this->startDate = '';
+        $this->endDate = '';
         $this->tags = new ArrayCollection();
         $this->loans = new ArrayCollection();
     }
@@ -176,7 +176,7 @@ class Announce {
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
     public function getStartDate()
     {
@@ -184,7 +184,7 @@ class Announce {
     }
 
     /**
-     * @param DateTime $startDate
+     * @param string $startDate
      */
     public function setStartDate($startDate)
     {
@@ -192,7 +192,7 @@ class Announce {
     }
 
     /**
-     * @return DateTime
+     * @return string
      */
     public function getEndDate()
     {
@@ -200,7 +200,7 @@ class Announce {
     }
 
     /**
-     * @param DateTime $endDate
+     * @param string $endDate
      */
     public function setEndDate($endDate)
     {
