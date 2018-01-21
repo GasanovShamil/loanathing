@@ -10,12 +10,18 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
  * @ORM\Entity
  * @ORM\Table(name="Announce")
+ * @Vich\Uploadable
  */
 class Announce {
+
+    //region Id
     /**
      * @var integer
      *
@@ -24,76 +30,6 @@ class Announce {
      * @ORM\Column(name="id", type="integer")
      */
     private $id;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="announces")
-     * @ORM\JoinColumn(name="owner", referencedColumnName="id")
-     */
-    private $owner;
-
-    /**
-     * @var integer
-     *
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Type")
-     * @ORM\JoinColumn(name="type", referencedColumnName="id")
-     */
-    private $type;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string")
-     */
-    private $name;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="description", type="string")
-     */
-    private $description;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="startDate", type="string")
-     */
-    private $startDate;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="endDate", type="string")
-     */
-    private $endDate;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Tag", cascade={"persist"})
-     */
-    private $tags;
-
-    /**
-     * @var ArrayCollection
-     *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Loan", mappedBy="announce")
-     */
-    private $loans;
-
-    public function __construct() {
-        $this->id = 0;
-        $this->owner = null;
-        $this->type = null;
-        $this->name = '';
-        $this->description = '';
-        $this->startDate = '';
-        $this->endDate = '';
-        $this->tags = new ArrayCollection();
-        $this->loans = new ArrayCollection();
-    }
 
     /**
      * @return int
@@ -110,6 +46,16 @@ class Announce {
     {
         $this->id = $id;
     }
+    //endregion
+
+    //region Owner
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="announces")
+     * @ORM\JoinColumn(name="owner", referencedColumnName="id")
+     */
+    private $owner;
 
     /**
      * @return int
@@ -127,6 +73,17 @@ class Announce {
         $this->owner = $owner;
     }
 
+    //endregion
+
+    //region Type
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Type")
+     * @ORM\JoinColumn(name="type", referencedColumnName="id")
+     */
+    private $type;
+
     /**
      * @return int
      */
@@ -142,6 +99,43 @@ class Announce {
     {
         $this->type = $type;
     }
+    //endregion
+
+    //region Tag
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Tag")
+     * @ORM\JoinColumn(name="tag", referencedColumnName="id")
+     */
+    private $tag;
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getTag()
+    {
+        return $this->tag;
+    }
+
+    /**
+     * @param ArrayCollection $tag
+     */
+    public function setTag($tag)
+    {
+        $this->tag = $tag;
+    }
+    //endregion
+
+    //region Name
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="name", type="string")
+     *
+     * @Assert\NotBlank(message="Le titre est obligatoire")
+     */
+    private $name;
 
     /**
      * @return string
@@ -158,6 +152,17 @@ class Announce {
     {
         $this->name = $name;
     }
+    //endregion
+
+    //region Description
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="description", type="string")
+     *
+     * @Assert\NotBlank(message="La description est obligatoire")
+     */
+    private $description;
 
     /**
      * @return string
@@ -174,6 +179,69 @@ class Announce {
     {
         $this->description = $description;
     }
+    //endregion
+
+    //region File
+    /**
+     * @var File
+     *
+     * @Vich\UploadableField(mapping="announce_image", fileNameProperty="image")
+     */
+    private $file;
+
+    /**
+     * @return File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param File $image
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+    }
+    //endregion
+
+    //region Image
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string")
+     *
+     * @Assert\File(mimeTypes={ "image/png" }, mimeTypesMessage="Le fichier doit être au format PNG.")
+     */
+    private $image;
+
+    /**
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
+    }
+
+    /**
+     * @param string $image
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+    }
+    //endregion
+
+    //region StartDate
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="startDate", type="string")
+     *
+     * @Assert\NotBlank(message="La date de début est obligatoire")
+     */
+    private $startDate;
 
     /**
      * @return string
@@ -190,6 +258,17 @@ class Announce {
     {
         $this->startDate = $startDate;
     }
+    //endregion
+
+    //region EndDate
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="endDate", type="string")
+     *
+     * @Assert\NotBlank(message="La date de fin est obligatoire")
+     */
+    private $endDate;
 
     /**
      * @return string
@@ -206,22 +285,15 @@ class Announce {
     {
         $this->endDate = $endDate;
     }
+    //endregion
 
+    //region Loans
     /**
-     * @return ArrayCollection
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Loan", mappedBy="announce")
      */
-    public function getTags()
-    {
-        return $this->tags;
-    }
-
-    /**
-     * @param ArrayCollection $tags
-     */
-    public function setTags($tags)
-    {
-        $this->tags = $tags;
-    }
+    private $loans;
 
     /**
      * @return ArrayCollection
@@ -238,6 +310,18 @@ class Announce {
     {
         $this->loans = $loans;
     }
+    //endregion
 
-
+    public function __construct() {
+        $this->id = 0;
+        $this->owner = null;
+        $this->type = null;
+        $this->tag = null;
+        $this->name = '';
+        $this->description = '';
+        $this->image = '';
+        $this->startDate = '';
+        $this->endDate = '';
+        $this->loans = new ArrayCollection();
+    }
 }

@@ -21,17 +21,11 @@
 {% endblock %}
 
 {% block javascripts %}
+    <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/form.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
             $('select').material_select();
-            $('.form-date-picker').pickadate({
-                selectMonths: true,
-                selectYears: 15,
-                today: 'Aujourd\'hui',
-                clear: 'Effacer',
-                close: 'Valider',
-                closeOnSelect: true,
-            });
+            datePicker();
         });
     </script>
 {% endblock %}

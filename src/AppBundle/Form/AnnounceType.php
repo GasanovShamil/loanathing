@@ -2,14 +2,16 @@
 
 namespace AppBundle\Form;
 
+use AppBundle\Entity\Tag;
+use AppBundle\Entity\Type;
 use Symfony\Component\Form\AbstractType;
+use Doctrine\ORM\EntityRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AnnounceType extends AbstractType
 {
@@ -20,19 +22,51 @@ class AnnounceType extends AbstractType
     {
         $builder
             ->add(
+                'type',
+                EntityType::class,
+                array(
+                    'label' => 'Type',
+                    'class' => Type::class,
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('t')
+                            ->orderBy('t.id', 'ASC');
+                    },
+                    'choice_label' => 'label'
+                )
+            )
+            ->add(
+                'tag',
+                EntityType::class,
+                array(
+                    'label' => 'Tag',
+                    'class' => Tag::class,
+                    'attr' => array('placeholder' => 'Choisir un tag'),
+                    'query_builder' => function (EntityRepository $er) {
+                        return $er->createQueryBuilder('t')
+                            ->orderBy('t.label', 'ASC');
+                    },
+                    'choice_label' => 'label'
+                )
+            )
+            ->add(
                 'name',
                 TextType::class,
                 array(
-                    'label' => 'Titre',
-                    'constraints' => array(new NotBlank(array("message" => "Le titre est obligatoire")))
+                    'label' => 'Titre'
                 )
             )
             ->add(
                 'description',
                 TextareaType::class,
                 array(
-                    'label' => 'Description',
-                    'constraints' => array(new NotBlank(array("message" => "La description est obligatoire")))
+                    'label' => 'Description'
+                )
+            )
+            ->add(
+                'file',
+                FileType::class,
+                array(
+                    'label' => 'Image (.png)'
                 )
             )
             ->add(
@@ -40,8 +74,7 @@ class AnnounceType extends AbstractType
                 TextType::class,
                 array(
                     'label' => 'Début',
-                    'attr' => array('class' => 'form-date-picker'),
-                    'constraints' => array(new NotBlank(array("message" => "La date de début est obligatoire")))
+                    'attr' => array('class' => 'date-picker')
                 )
             )
             ->add(
@@ -49,24 +82,7 @@ class AnnounceType extends AbstractType
                 TextType::class,
                 array(
                     'label' => 'Fin',
-                    'attr' => array('class' => 'form-date-picker'),
-                    'constraints' => array(new NotBlank(array("message" => "La date de fin est obligatoire")))
-                )
-            )
-            ->add(
-                'type',
-                ChoiceType::class,
-                array(
-                    'label' => 'Type',
-                    'constraints' => array(new NotBlank(array("message" => "Le type est obligatoire")))
-                )
-            )
-            ->add(
-                'tags',
-                ChoiceType::class,
-                array(
-                    'label' => 'Tags',
-                    'attr' => array('required' => false)
+                    'attr' => array('class' => 'date-picker')
                 )
             )
         ;
@@ -89,6 +105,4 @@ class AnnounceType extends AbstractType
     {
         return 'appbundle_announce';
     }
-
-
 }

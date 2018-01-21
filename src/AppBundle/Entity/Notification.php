@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Notification")
  */
 class Notification {
+
+    //region Id
     /**
      * @var integer
      *
@@ -25,6 +27,24 @@ class Notification {
     private $id;
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    //endregion
+
+    //region User
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User", inversedBy="notifications")
@@ -33,6 +53,24 @@ class Notification {
     private $user;
 
     /**
+     * @return int
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param int $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+    //endregion
+
+    //region IsNew
+    /**
      * @var boolean
      *
      * @ORM\Column(name="isNew", type="boolean")
@@ -40,11 +78,46 @@ class Notification {
     private $isNew;
 
     /**
+     * @return boolean
+     */
+    public function isIsNew()
+    {
+        return $this->isNew;
+    }
+
+    /**
+     * @param boolean $isNew
+     */
+    public function setIsNew($isNew)
+    {
+        $this->isNew = $isNew;
+    }
+    //endregion
+
+    //region Content
+    /**
      * @var string
      *
      * @ORM\Column(name="content", type="string")
      */
     private $content;
+
+    /**
+     * @return string
+     */
+    public function getContent()
+    {
+        return $this->content;
+    }
+
+    /**
+     * @param string $content
+     */
+    public function setContent($content)
+    {
+        $this->content = $content;
+    }
+    //endregion
 
     public function __construct() {
         $this->id = 0;

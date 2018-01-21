@@ -19,11 +19,11 @@
             </tr>
             <tr>
                 <th>Startdate</th>
-                <td>{% if announce.startDate %}{{ announce.startDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ announce.startDate }}</td>
             </tr>
             <tr>
                 <th>Enddate</th>
-                <td>{% if announce.endDate %}{{ announce.endDate|date('Y-m-d H:i:s') }}{% endif %}</td>
+                <td>{{ announce.endDate }}</td>
             </tr>
         </tbody>
     </table>

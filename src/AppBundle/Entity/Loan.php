@@ -15,6 +15,8 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="Loan")
  */
 class Loan {
+
+    //region Id
     /**
      * @var integer
      *
@@ -25,6 +27,24 @@ class Loan {
     private $id;
 
     /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    //endregion
+
+    //region Applicant
+    /**
      * @var integer
      *
      * @ORM\ManyToOne(targetEntity="AppBundle\Entity\User")
@@ -32,6 +52,24 @@ class Loan {
      */
     private $applicant;
 
+    /**
+     * @return int
+     */
+    public function getApplicant()
+    {
+        return $this->applicant;
+    }
+
+    /**
+     * @param int $applicant
+     */
+    public function setApplicant($applicant)
+    {
+        $this->applicant = $applicant;
+    }
+    //endregion
+
+    //region Announce
     /**
      * @var integer
      *
@@ -41,40 +79,129 @@ class Loan {
     private $announce;
 
     /**
-     * @var DateTime
+     * @return int
+     */
+    public function getAnnounce()
+    {
+        return $this->announce;
+    }
+
+    /**
+     * @param int $announce
+     */
+    public function setAnnounce($announce)
+    {
+        $this->announce = $announce;
+    }
+    //endregion
+
+    //region StartDate
+    /**
+     * @var string
      *
-     * @ORM\Column(name="startDate", type="datetime")
+     * @ORM\Column(name="startDate", type="string")
      */
     private $startDate;
 
     /**
-     * @var DateTime
+     * @return string
+     */
+    public function getStartDate()
+    {
+        return $this->startDate;
+    }
+
+    /**
+     * @param string $startDate
+     */
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+    //endregion
+
+    //region EndDate
+    /**
+     * @var string
      *
-     * @ORM\Column(name="endDate", type="datetime")
+     * @ORM\Column(name="endDate", type="string")
      */
     private $endDate;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="transferCode", type="string")
+     * @return string
      */
-    private $transferCode;
+    public function getEndDate()
+    {
+        return $this->endDate;
+    }
 
+    /**
+     * @param string $endDate
+     */
+    public function setEndDate($endDate)
+    {
+        $this->endDate = $endDate;
+    }
+    //endregion
+
+    //region OwnerCode
     /**
      * @var string
      *
-     * @ORM\Column(name="returnCode", type="string")
+     * @ORM\Column(name="ownerCode", type="string")
      */
-    private $returnCode;
+    private $ownerCode;
+
+    /**
+     * @return string
+     */
+    public function getOwnerCode()
+    {
+        return $this->ownerCode;
+    }
+
+    /**
+     * @param string $ownerCode
+     */
+    public function setOwnerCode($ownerCode)
+    {
+        $this->ownerCode = $ownerCode;
+    }
+    //endregion
+
+    //region ApplicantCode
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="applicantCode", type="string")
+     */
+    private $applicantCode;
+
+    /**
+     * @return string
+     */
+    public function getApplicantCode()
+    {
+        return $this->applicantCode;
+    }
+
+    /**
+     * @param string $applicantCode
+     */
+    public function setApplicantCode($applicantCode)
+    {
+        $this->applicantCode = $applicantCode;
+    }
+    //endregion
 
     public function __construct() {
         $this->id = 0;
         $this->applicant = null;
         $this->announce = null;
-        $this->startDate = new \DateTime();
-        $this->endDate = new \DateTime();
-        $this->transferCode = null;
-        $this->returnCode = null;
+        $this->startDate = '';
+        $this->endDate = '';
+        $this->ownerCode = null;
+        $this->applicantCode = null;
     }
 }
