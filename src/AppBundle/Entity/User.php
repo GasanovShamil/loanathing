@@ -13,14 +13,32 @@ use Doctrine\Common\Collections\ArrayCollection;
  */
 class User extends BaseUser {
 
+    //region Id
     /**
      * @var integer
      *
      * @ORM\Id
-     * @ORM\Column(type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(name="id", type="integer")
      */
     protected $id;
+
+    /**
+     * @return int
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+    //endregion
 
     /**
      * @var ArrayCollection
@@ -39,7 +57,7 @@ class User extends BaseUser {
     /**
      * @var ArrayCollection
      *
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feedback", mappedBy="target")
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feedback", mappedBy="user")
      */
     private $feedbacks;
 

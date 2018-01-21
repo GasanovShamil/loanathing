@@ -13,6 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity
  * @ORM\Table(name="Loan")
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\LoanRepository")
  */
 class Loan {
 
@@ -201,7 +202,7 @@ class Loan {
         $this->announce = null;
         $this->startDate = '';
         $this->endDate = '';
-        $this->ownerCode = null;
-        $this->applicantCode = null;
+        $this->ownerCode = '';
+        $this->applicantCode = '';
     }
 }

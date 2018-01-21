@@ -13,9 +13,11 @@
         {% block navbar %}
             <nav>
                 NAVBAR
+                <a href="{{ path('announce_index') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Voir les annonces</a>
+                <a href="{{ path('loan_answer') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Répondre</a>
                 {% if not app.user %}
-                    <a href="{{ path('fos_user_security_login') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>S'inscrire</a>
-                    <a href="{{ path('fos_user_registration_register') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Se connecter</a>
+                    <a href="{{ path('fos_user_security_login') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Se connecter</a>
+                    <a href="{{ path('fos_user_registration_register') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>S'inscrire</a>
                 {% endif %}
             </nav>
         {% endblock %}
@@ -23,6 +25,7 @@
         <div class="container">
             {% block content %}{% endblock %}
         </div>
+
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/materialize.min.js"></script>
         {% block javascripts %}{% endblock %}

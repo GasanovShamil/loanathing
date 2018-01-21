@@ -25,7 +25,7 @@ class AnnounceController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $announces = $em->getRepository('AppBundle:Announce')->findAll();
+        $announces = $em->getRepository(Announce::class)->findAll();
 
         return $this->render('front/announce/index.html.twig', array(
             'announces' => $announces,
@@ -45,6 +45,7 @@ class AnnounceController extends Controller
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $announce->setOwner($this->get('security.token_storage')->getToken()->getUser());
             $em = $this->getDoctrine()->getManager();
             $em->persist($announce);
             $em->flush();

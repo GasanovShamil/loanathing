@@ -63,15 +63,15 @@
             datePicker();
 
             $('.participate').click(function() {
-                var annonce = $(this).data('annonce');
-                var start = $('#start-' + annonce).val();
-                var end = $('#end-' + annonce).val();
+                var announce = $(this).data('annonce');
+                var start = $('#start-' + announce).val();
+                var end = $('#end-' + announce).val();
 
-                if (start != "" && end != "") {
+                if (announce != "" && start != "" && end != "") {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ path('loan_participate') }}',
-                        data: { id: annonce, start: start, end: end },
+                        url: '{{ path('loan_apply') }}',
+                        data: { id: announce, start: start, end: end },
                         dataType: 'json',
                         success: function (data) {
                             Materialize.toast(data.content, 3000, 'toast-' + data.type)
