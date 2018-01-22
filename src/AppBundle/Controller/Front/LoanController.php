@@ -20,7 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 class LoanController extends Controller
 {
     /**
-     * Participate to an announce
+     * Show list of my announces' loans
      *
      * @Route("/answer", name="loan_answer")
      * @Method("GET")
@@ -169,5 +169,23 @@ class LoanController extends Controller
 
             } else return new JsonResponse(array('type' => 'error', 'content' => 'L\'id ne doit pas être vide'));
         } else return new JsonResponse(array('type' => 'error', 'content' => 'Appel ajax uniquement'));
+    }
+
+    /**
+     * Enter a code
+     *
+     * @Route("/code", name="loan_code")
+     * @Method("GET")
+     */
+    public function codeAction(Request $request)
+    {
+        $loans = $this->getDoctrine()
+            ->getManager()
+            ->getRepository(Loan::class)
+            ->findLoansByOwner($this->get('security.token_storage')->getToken()->getUser());
+
+        return $this->render('front/loan/answer.html.twig', array(
+            'loans' => $loans,
+        ));
     }
 }

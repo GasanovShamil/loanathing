@@ -14,8 +14,9 @@
         {% block navbar %}
             <nav>
                 NAVBAR
-                <a href="{{ path('announce_index') }}" class="waves-effect waves-light btn">Voir les annonces</a>
-                <a href="{{ path('loan_answer') }}" class="waves-effect waves-light btn">Répondre</a>
+                <a href="{{ path('announce_index') }}" class="waves-effect waves-light btn">Annonces</a>
+                <a href="{{ path('loan_answer') }}" class="waves-effect waves-light btn">Demandes</a>
+                <a href="{{ path('loan_code') }}" class="waves-effect waves-light btn">Codes</a>
                 {% if not app.user %}
                     <a href="{{ path('fos_user_security_login') }}" class="waves-effect waves-light btn">Se connecter</a>
                     <a href="{{ path('fos_user_registration_register') }}" class="waves-effect waves-light btn">S'inscrire</a>
