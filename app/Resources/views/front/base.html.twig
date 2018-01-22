@@ -4,8 +4,9 @@
         <meta charset="UTF-8" />
         <title>{% block title %}Loan A Thing{% endblock %}</title>
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
-        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/materialize.min.css" media="screen,projection"/>
-        <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/materialize.min.css" />
+        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/font-awesome.min.css" />
+        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/site.css" />
         {% block stylesheets %}{% endblock %}
     </head>
 
@@ -13,11 +14,11 @@
         {% block navbar %}
             <nav>
                 NAVBAR
-                <a href="{{ path('announce_index') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Voir les annonces</a>
-                <a href="{{ path('loan_answer') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Répondre</a>
+                <a href="{{ path('announce_index') }}" class="waves-effect waves-light btn">Voir les annonces</a>
+                <a href="{{ path('loan_answer') }}" class="waves-effect waves-light btn">Répondre</a>
                 {% if not app.user %}
-                    <a href="{{ path('fos_user_security_login') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>Se connecter</a>
-                    <a href="{{ path('fos_user_registration_register') }}" class="waves-effect waves-light btn"><i class="material-icons left">cloud</i>S'inscrire</a>
+                    <a href="{{ path('fos_user_security_login') }}" class="waves-effect waves-light btn">Se connecter</a>
+                    <a href="{{ path('fos_user_registration_register') }}" class="waves-effect waves-light btn">S'inscrire</a>
                 {% endif %}
             </nav>
         {% endblock %}
@@ -28,6 +29,7 @@
 
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/materialize.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/site.js"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>

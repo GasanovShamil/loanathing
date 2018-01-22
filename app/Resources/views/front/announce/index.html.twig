@@ -8,14 +8,14 @@
             <div class="col s4">
                 <div class="card">
                     <div class="card-image waves-effect waves-block waves-light">
-                        <img class="activator" src="{{ app.request.getBaseURL() }}/../../assets/img/announces/{{ announce.image }}">
+                        <img class="activator" src="{{ app.request.getBaseURL() }}/../../assets/img/announces/{{ announce.image }}" />
                     </div>
                     <div class="card-content">
-                        <span class="card-title activator grey-text text-darken-4">{{ announce.name }}<i class="material-icons right">add</i></span>
+                        <span class="card-title activator grey-text text-darken-4">{{ announce.name }}<i class="fa fa-plus-circle right" aria-hidden="true"></i></span>
                         <p>Début : {{ announce.startDate }} - Fin : {{ announce.endDate }}</p>
                     </div>
                     <div class="card-reveal">
-                        <span class="card-title grey-text text-darken-4">{{ announce.name }}<i class="material-icons right">close</i></span>
+                        <span class="card-title grey-text text-darken-4">{{ announce.name }}<i class="fa fa-times right" aria-hidden="true"></i></span>
                         <p>{{ announce.description }}</p>
                         <p>Début : {{ announce.startDate }} - Fin : {{ announce.endDate }}</p>
                         <span class="card-title grey-text text-darken-4">Participer</span>
@@ -25,7 +25,7 @@
                                 <input type="text" id="start-{{ announce.id }}" class="date-picker col s3" placeholder="Début" />
                                 <span class="col s2 offset-s1 date-label">au </span>
                                 <input type="text" id="end-{{ announce.id }}" class="date-picker col s3" placeholder="Fin" />
-                                <button class="participate waves-effect waves-light btn col s4 offset-s4" data-annonce="{{ announce.id }}">Envoyer</button>
+                                <button class="participate waves-effect waves-light btn col s4 offset-s4" data-announce="{{ announce.id }}">Envoyer</button>
                             </div>
                         </p>
                     </div>
@@ -46,24 +46,17 @@
         .date-label {
             line-height: 3;
         }
-        .toast-success {
-            background-color: #2E7D32;
-        }
-        .toast-error {
-            background-color: #D32F2F;
-        }
     </style>
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/form.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
             $('select').material_select();
             datePicker();
 
             $('.participate').click(function() {
-                var announce = $(this).data('annonce');
+                var announce = $(this).data('announce');
                 var start = $('#start-' + announce).val();
                 var end = $('#end-' + announce).val();
 
@@ -74,10 +67,10 @@
                         data: { id: announce, start: start, end: end },
                         dataType: 'json',
                         success: function (data) {
-                            Materialize.toast(data.content, 3000, 'toast-' + data.type)
+                            Materialize.toast(data.content, 3000, 'bc-' + data.type);
                         },
                         error: function(xhr, status, error) {
-                            Materialize.toast(xhr.responseText, 3000, 'toast-error')
+                            Materialize.toast(xhr.responseText, 3000, 'bc-error');
                         }
                     });
                 }

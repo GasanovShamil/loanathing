@@ -9,27 +9,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class LoanRepository extends EntityRepository
 {
-    public function findLoansForAnnounces($owner)
+    public function findLoansByOwner($owner)
     {
-//        $announcesIds = array();
-//        foreach ($announces as $announce) {
-//            $announcesIds[] = $announce->getId();
-//        }
-//
-//        return $this->createQueryBuilder('l')
-//            ->select('l')
-//            ->where('l.announce IN (:announces)')
-//            ->andWhere('l.ownerCode <> \'\'')
-//            ->andWhere('l.applicantCode <> \'\'')
-//            ->setParameter('announces', array_values($announcesIds))
-//            ->getQuery();
-
         return $this->createQueryBuilder('l')
-            ->select('l')
-            ->where('l.announce IN (SELECT id FROM announce WHERE owner = :owner)')
-            ->andWhere('l.ownerCode <> \'\'')
-            ->andWhere('l.applicantCode <> \'\'')
-            ->setParameter('owner', $owner)
+            ->leftJoin('l.announce', 'a')
+            ->leftJoin('a.owner', 'u')
+            ->where('u.id = :id')
+            ->andWhere('l.ownerCode =\'\'')
+            ->andWhere('l.applicantCode = \'\'')
+            ->setParameter('id', $owner)
             ->getQuery()
             ->getResult();
     }

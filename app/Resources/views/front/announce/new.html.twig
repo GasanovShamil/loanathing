@@ -16,10 +16,8 @@
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/form.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
-            $('select').material_select();
             datePicker();
         });
     </script>

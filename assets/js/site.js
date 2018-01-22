@@ -2,6 +2,12 @@
  * Created by Léo on 21/01/2018.
  */
 
+$( document ).ready(function() {
+    $('.tooltipped').tooltip({delay: 50, position: 'top'});
+    $('.modal').modal();
+    $('select').material_select();
+});
+
 function datePicker() {
     $('.date-picker').pickadate({
         container: "body",

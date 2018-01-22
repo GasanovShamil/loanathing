@@ -29,4 +29,5 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/announce, role: ROLE_USER }
+        - { path: ^/loan, role: ROLE_USER }
         - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }

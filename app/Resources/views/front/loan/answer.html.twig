@@ -9,92 +9,144 @@
                 <tr>
                     <th>Annonce</th>
                     <th>Utilisateur</th>
-                    <th>Accepter</th>
-                    <th>Refuser</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for loan in loans %}
-                    <tr>
-                        <td>{{ loan.announce.name }}</td>
-                        <td>{{ loan.applicant.username }}</td>
-                        <td>Accepter</td>
-                        <td>Refuser</td>
+                    <tr id="line-{{ loan.id }}">
+                        <td><button class="waves-effect waves-light btn show-announce" data-announce="{{ loan.announce.id }}">{{ loan.announce.name }}</button></td>
+                        <td><button class="waves-effect waves-light btn show-user" data-user="{{ loan.applicant.id }}">{{ loan.applicant.username }}</button></td>
+                        <td>{{ loan.startDate }}</td>
+                        <td>{{ loan.endDate }}</td>
+                        <td>
+                            <i class="fa fa-check-circle-o c-success tooltipped accept" data-tooltip="Accepter" data-loan="{{ loan.id }}" aria-hidden="true"></i>
+                            <i class="fa fa-times-circle-o c-error tooltipped refuse" data-tooltip="Refuser" data-loan="{{ loan.id }}" aria-hidden="true"></i>
+                        </td>
                     </tr>
-
-                    {#<div class="col s4">#}
-                        {#<div class="card">#}
-                            {#<div class="card-image waves-effect waves-block waves-light">#}
-                                {#<img class="activator" src="{{ app.request.getBaseURL() }}/../../assets/img/announces/{{ announce.image }}">#}
-                            {#</div>#}
-                            {#<div class="card-content">#}
-                                {#<span class="card-title activator grey-text text-darken-4">{{ announce.name }}<i class="material-icons right">add</i></span>#}
-                                {#<p>Début : {{ announce.startDate }} - Fin : {{ announce.endDate }}</p>#}
-                            {#</div>#}
-                            {#<div class="card-reveal">#}
-                                {#<span class="card-title grey-text text-darken-4">{{ announce.name }}<i class="material-icons right">close</i></span>#}
-                                {#<p>{{ announce.description }}</p>#}
-                                {#<p>Début : {{ announce.startDate }} - Fin : {{ announce.endDate }}</p>#}
-                                {#<span class="card-title grey-text text-darken-4">Participer</span>#}
-                                {#<p>#}
-                                {#<div class="row">#}
-                                    {#<span class="col s2 date-label">Du </span>#}
-                                    {#<input type="text" id="start-{{ announce.id }}" class="date-picker col s3" placeholder="Début" />#}
-                                    {#<span class="col s2 offset-s1 date-label">au </span>#}
-                                    {#<input type="text" id="end-{{ announce.id }}" class="date-picker col s3" placeholder="Fin" />#}
-                                    {#<button class="participate waves-effect waves-light btn col s4 offset-s4" data-annonce="{{ announce.id }}">Envoyer</button>#}
-                                {#</div>#}
-                                {#</p>#}
-                            {#</div>#}
-                        {#</div>#}
-                    {#</div>#}
                 {% endfor %}
             </tbody>
         </table>
+    </div>
+
+    <div id="modal-announce" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4><span id="modal-announce-name"></span></h4><span id="modal-announce-dates"></span>
+            <p class="row">
+                <div class="col s3">
+                    <img id="modal-announce-image" src="" />
+                </div>
+                <div class="col s9">
+                    <span id="modal-announce-description"></span>
+                </div>
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
+    </div>
+
+    <div id="modal-user" class="modal bottom-sheet">
+        <div class="modal-content">
+            <h4><span id="modal-user-username"></span></h4>
+            <p class="row">
+            </p>
+        </div>
+        <div class="modal-footer">
+            <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+        </div>
     </div>
 {% endblock %}
 
 {% block stylesheets %}
     <style type="text/css">
-        .date-label {
-            line-height: 3;
+        #modal-announce-dates {
+            font-style: italic;
         }
-        .toast-success {
-            background-color: #2E7D32;
-        }
-        .toast-error {
-            background-color: #D32F2F;
+        .fa {
+            font-size: 35px;
+            cursor: pointer;
+            margin-left: 20px;
         }
     </style>
 {% endblock %}
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/form.js"></script>
     <script type="text/javascript">
         $( document ).ready(function() {
-            $('select').material_select();
-            datePicker();
+            $('.tooltipped').tooltip({delay: 50, position: 'top'});
+            $('.modal').modal();
 
-            $('.participate').click(function() {
-                var announce = $(this).data('annonce');
-                var start = $('#start-' + announce).val();
-                var end = $('#end-' + announce).val();
-
-                if (announce != "" && start != "" && end != "") {
+            $('.show-announce').click(function() {
+                var announce = $(this).data('announce');
+                if (announce != "") {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ path('loan_apply') }}',
-                        data: { id: announce, start: start, end: end },
+                        url: '{{ path('loan_announce') }}',
+                        data: { id: announce },
                         dataType: 'json',
                         success: function (data) {
-                            Materialize.toast(data.content, 3000, 'toast-' + data.type)
+                            $('#modal-announce-name').html(data.content.name);
+                            $('#modal-announce-dates').html(data.content.dates);
+                            $('#modal-announce-image').attr('src', data.content.image);
+                            $('#modal-announce-description').html(data.content.description);
+                            $('#modal-announce').modal('open');
                         },
                         error: function(xhr, status, error) {
-                            Materialize.toast(xhr.responseText, 3000, 'toast-error')
+                            Materialize.toast(xhr.responseText, 3000, 'toast-error');
                         }
                     });
                 }
             });
+
+            $('.show-user').click(function() {
+                var user = $(this).data('user');
+                if (user != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ path('loan_user') }}',
+                        data: { id: user },
+                        dataType: 'json',
+                        success: function (data) {
+                            $('#modal-user-username').html(data.content.username);
+                            $('#modal-user').modal('open');
+                        },
+                        error: function(xhr, status, error) {
+                            Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                        }
+                    });
+                }
+            });
+
+            $('.accept').click(function() {
+                var loan = $(this).data('loan');
+                var url = '{{ path('loan_accept') }}';
+                if (loan != "") answer(loan, url);
+            });
+
+            $('.refuse').click(function() {
+                var loan = $(this).data('loan');
+                var url = '{{ path('loan_refuse') }}';
+                if (loan != "") answer(loan, url);
+            });
         });
+
+        function answer(id, url) {
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: { id: id },
+                dataType: 'json',
+                success: function (data) {
+                    Materialize.toast(data.content, 3000, 'bc-' + data.type);
+                    $('#line-' + id).remove();
+                },
+                error: function(xhr, status, error) {
+                    Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                }
+            });
+        }
     </script>
 {% endblock %}

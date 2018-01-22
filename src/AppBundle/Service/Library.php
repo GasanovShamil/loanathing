@@ -27,7 +27,7 @@ class Library
         $start = $this->dateStringToInt($dateStart);
         $end = $this->dateStringToInt($dateEnd);
 
-        return $start >= $announceStart && $end <= $announceEnd;
+        return $start <= $end && $start >= $announceStart && $end <= $announceEnd;
     }
 
     /**
@@ -39,5 +39,19 @@ class Library
     {
         $dateArray = explode('/', $date);
         return intval($dateArray[2].$dateArray[1].$dateArray[0]);
+    }
+
+    /**
+     * Generate a oode
+     *
+     * @return string
+     */
+    function generateCode() {
+        $characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for ($i = 0; $i < 10; $i++) {
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $randomString;
     }
 }
