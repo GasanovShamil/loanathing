@@ -1,22 +1,69 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
+{% block stylesheets %}    
+        <style type="text/css">
+            #form-login{
+                width: 40%;
+                margin: auto;
+                margin-top: 3%;
+                background-color: #ffebee;
+                padding-top: 1%;
+                padding-bottom: 1%;
+            }
+
+            #form-input-login{
+                width: 100%;
+                margin: auto;
+            }
+        </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $( document ).ready(function(){
+            $(".button-collapse").sideNav();
+        })
+    </script>
+{% endblock %}
+
 {% if error %}
     <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
 {% endif %}
+<h4 class="red-text darken-1 center-align"> Connectez-vous à votre compte ! </h4>
+<div id="form-login" class="grey lighten-2">
+    <form action="{{ path("fos_user_security_check") }}" method="post">
+        {% if csrf_token %}
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
+        {% endif %}
+        <div id="form-input-login">
+            <div class="row">
+                <div class="col s10 offset-s1">
+                    <!-- <label for="username">{{ 'security.login.username'|trans }}</label> -->
+                    <label for="username" class="grey-text text-darken-4">Utilisateur</label>
+                    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" class="red-text text-darken-4" />
+                </div>
+            </div>
 
-<form action="{{ path("fos_user_security_check") }}" method="post">
-    {% if csrf_token %}
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
-    {% endif %}
+            <div class="row white-text">
+                <div class="col s10 offset-s1">
+                    <!-- <label for="password">{{ 'security.login.password'|trans }}</label> -->
+                    <label for="password" class="grey-text text-darken-4">Mot de passe</label>
+                    <input type="password" id="password" name="_password" required="required" class="red-text text-darken-4"/>
+                </div>
+            </div>
 
-    <label for="username">{{ 'security.login.username'|trans }}</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}" required="required" />
-
-    <label for="password">{{ 'security.login.password'|trans }}</label>
-    <input type="password" id="password" name="_password" required="required" />
-
-    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-    <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
-
-    <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
-</form>
+            <div class="row">
+                <div class="col s10 offset-s1 center-align">
+                    <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
+                    <!-- <label for="remember_me">{{ 'security.login.remember_me'|trans }}</label> -->
+                    <label for="remember_me" class="grey-text text-darken-4">Se souvenir de moi</label>
+                </div>
+            </div>
+            <div class="row center-align">
+                <!-- <input type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" /> -->            
+                <input type="submit" id="_submit" name="_submit" value="Connexion" class="waves-effect waves-light btn red" />
+                <p class="center-align grey-text text-darken-4"> Vous n'avez pas de compte ? Créez en un <a href="{{ path('fos_user_registration_register') }}">ici</a> ! </p>
+            </div>
+        </div>
+    </form>
+</div>

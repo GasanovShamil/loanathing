@@ -2,18 +2,35 @@
 <html>
     <head>
         <meta charset="UTF-8" />
+        <title>{% block title %}Se connecter{% endblock %}</title>
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/materialize.min.css" />
+        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/font-awesome.min.css" />
+        <link type="text/css" rel="stylesheet" href="{{ app.request.getBaseURL() }}/../../assets/css/site.css" />
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        <div>
-            {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
-                <a href="{{ path('fos_user_security_logout') }}">
-                    {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
-                </a>
-            {% else %}
-                <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
-            {% endif %}
-        </div>
+        {% block navbar %}
+            <nav class="red darken-1">
+                <div class="nav-wrapper">
+                    <a href="{{ path('frontHomepage') }}" class="brand-logo">Loan a thing</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a href="{{ path('announce_index') }}">Annonces</a></li>
+                        <li><a href="{{ path('loan_answer') }}">Demandes</a></li>
+                        <li><a href="{{ path('loan_code') }}">Codes</a></li>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                                <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
+                            {% else %}
+                                <li><a href="{{ path('fos_user_security_login') }}">Se connecter</a></li>
+                            {% endif %}
+                            {% if not app.user %}   
+                                <li><a href="{{ path('fos_user_registration_register') }}">S'inscrire</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </nav>
+        {% endblock %}
 
         {% if app.request.hasPreviousSession %}
             {% for type, messages in app.session.flashbag.all() %}
@@ -29,5 +46,10 @@
             {% block fos_user_content %}
             {% endblock fos_user_content %}
         </div>
+        <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/jquery-3.2.1.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/materialize.min.js"></script>
+        <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/site.js"></script>        
+        {% block javascripts %}{% endblock %}
+
     </body>
 </html>
