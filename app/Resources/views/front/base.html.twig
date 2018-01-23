@@ -12,15 +12,24 @@
 
     <body>
         {% block navbar %}
-            <nav>
-                NAVBAR
-                <a href="{{ path('announce_index') }}" class="waves-effect waves-light btn">Annonces</a>
-                <a href="{{ path('loan_answer') }}" class="waves-effect waves-light btn">Demandes</a>
-                <a href="{{ path('loan_code') }}" class="waves-effect waves-light btn">Codes</a>
-                {% if not app.user %}
-                    <a href="{{ path('fos_user_security_login') }}" class="waves-effect waves-light btn">Se connecter</a>
-                    <a href="{{ path('fos_user_registration_register') }}" class="waves-effect waves-light btn">S'inscrire</a>
-                {% endif %}
+            <nav class="red darken-1">
+                <div class="nav-wrapper">
+                    <a href="{{ path('frontHomepage') }}" class="brand-logo">Loan a thing</a>
+                    <ul id="nav-mobile" class="right hide-on-med-and-down">
+                        <li><a href="{{ path('announce_index') }}">Annonces</a></li>
+                        <li><a href="{{ path('loan_answer') }}">Demandes</a></li>
+                        <li><a href="{{ path('loan_code') }}">Codes</a></li>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+                                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
+                                <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
+                            {% else %}
+                                <li><a href="{{ path('fos_user_security_login') }}">Se connecter</a></li>
+                            {% endif %}
+                            {% if not app.user %}   
+                                <li><a href="{{ path('fos_user_registration_register') }}">S'inscrire</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
             </nav>
         {% endblock %}
 
