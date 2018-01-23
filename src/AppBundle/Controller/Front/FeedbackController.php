@@ -81,6 +81,7 @@ class FeedbackController extends Controller
                     $feedback->setLoan($loan);
                     $feedback->setGrade($grade);
                     $feedback->setComment($content);
+                    $feedback->setPostDate(date('d/m/Y'));
                     $em->persist($feedback);
                     $em->flush();
 

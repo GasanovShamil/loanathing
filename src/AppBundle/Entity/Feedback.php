@@ -11,7 +11,7 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\FeedbackRepository")
  * @ORM\Table(name="Feedback")
  */
 class Feedback {
@@ -143,7 +143,6 @@ class Feedback {
     {
         $this->grade = $grade;
     }
-
     //endregion
 
     //region Comment
@@ -171,12 +170,38 @@ class Feedback {
     }
     //endregion
 
+    //region PostDate
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="postDate", type="string")
+     */
+    private $postDate;
+
+    /**
+     * @return string
+     */
+    public function getPostDate()
+    {
+        return $this->postDate;
+    }
+
+    /**
+     * @param string $postDate
+     */
+    public function setPostDate($postDate)
+    {
+        $this->postDate = $postDate;
+    }
+    //endregion
+
     public function __construct() {
         $this->id = 0;
         $this->author = null;
         $this->target = null;
         $this->loan = null;
         $this->grade = null;
+        $this->comment = '';
         $this->comment = '';
     }
 }

@@ -3,6 +3,7 @@
 namespace AppBundle\Controller\Front;
 
 use AppBundle\Entity\Announce;
+use AppBundle\Entity\Feedback;
 use AppBundle\Entity\Loan;
 use AppBundle\Entity\User;
 use AppBundle\Service\Library;
@@ -120,15 +121,21 @@ class LoanController extends Controller
     {
         if ($request->isXmlHttpRequest()) {
             $user = $request->get('user');
+            $em = $this->getDoctrine()->getManager();
 
             if ($user != '') {
-                $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($user);
+                $user = $em->getRepository(User::class)->find($user);
+
+                $average = $em->getRepository(Feedback::class)->findAverageGradeByUser($user);
+                $feedbacks = $em->getRepository(Feedback::class)->findFeedbacksByUser($user);
 
                 if (!$user)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune utilisateur trouvé'));
 
                 return new JsonResponse(array('type' => 'success', 'content' => array(
-                    'username' => $user->getUsername()
+                    'username' => $user->getUsername(),
+                    'average' => $average,
+                    'feedbacks' => $feedbacks
                 )));
             }
 
