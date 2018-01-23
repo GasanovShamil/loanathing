@@ -1,8 +1,41 @@
 {% trans_default_domain 'FOSUserBundle' %}
-<h1> Se connecter </h1>
-{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
-    {{ form_widget(form) }}
-    <div>
-        <input type="submit" value="{{ 'registration.submit'|trans }}" />
-    </div>
-{{ form_end(form) }}
+
+{% block title %}
+<title> Inscription</title>
+{% endblock %}
+
+{% block stylesheets %}    
+        <style type="text/css">
+            #form-login{
+                width: 40%;
+                margin: auto;
+                margin-top: 3%;
+                background-color: #ffebee;
+                padding-top: 1%;
+                padding-bottom: 1%;
+            }
+
+            #form-input-login{
+                width: 100%;
+                margin: auto;
+                padding : 5%;
+            }
+        </style>
+{% endblock %}
+
+{% block labelpage %}
+<h4 class="red-text darken-1 center-align"> Inscription </h4>
+{% endblock %}
+
+{% block fos_user_content %}
+<div id="form-input-login">
+	{{ form_start(form, {'method': 'post', 'action': path('fos_user_registration_register'), 'attr': {'class': 'fos_user_registration_register'}}) }}
+	    {{ form_widget(form) }}
+	    <div class="center-align">
+	        <input type="submit" value="Inscription" class="waves-effect waves-light btn red"/>
+	    </div>
+	{{ form_end(form) }}
+</div>
+{% endblock %}
+
+
