@@ -129,13 +129,24 @@ class LoanController extends Controller
                 $average = $em->getRepository(Feedback::class)->findAverageGradeByUser($user);
                 $feedbacks = $em->getRepository(Feedback::class)->findFeedbacksByUser($user);
 
+                $feedbacksArray = array();
+
+                foreach ($feedbacks as $feedback) {
+                    $feedbacksArray[] = array(
+                        'date' => $feedback->getPostDate(),
+                        'author' => $feedback->getAuthor()->getUsername(),
+                        'grade' => $feedback->getGrade(),
+                        'comment' => $feedback->getComment(),
+                    );
+                }
+
                 if (!$user)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune utilisateur trouvé'));
 
                 return new JsonResponse(array('type' => 'success', 'content' => array(
                     'username' => $user->getUsername(),
                     'average' => $average,
-                    'feedbacks' => $feedbacks
+                    'feedbacks' => $feedbacksArray
                 )));
             }
 

@@ -52,8 +52,41 @@
     <div id="modal-user" class="modal bottom-sheet">
         <div class="modal-content">
             <h4 id="modal-user-username"></h4>
-            <span><span id="modal-user-average"></span> /5</span>
-            <p class="row">
+            <span id="modal-user-average"></span>
+
+            <p id="modal-user-feedbacks-1" class="row feedback-line">
+                <span class="col s1 italic feedback-date"></span>
+                <span class="col s1 bold feedback-author"></span>
+                <span class="col s1 feedback-grade"></span>
+                <span class="col s3 feedback-comment"></span>
+            </p>
+
+            <p id="modal-user-feedbacks-2" class="row feedback-line">
+                <span class="col s1 italic feedback-date"></span>
+                <span class="col s1 bold feedback-author"></span>
+                <span class="col s1 feedback-grade"></span>
+                <span class="col s3 feedback-comment"></span>
+            </p>
+
+            <p id="modal-user-feedbacks-3" class="row feedback-line">
+                <span class="col s1 italic feedback-date"></span>
+                <span class="col s1 bold feedback-author"></span>
+                <span class="col s1 feedback-grade"></span>
+                <span class="col s3 feedback-comment"></span>
+            </p>
+
+            <p id="modal-user-feedbacks-4" class="row feedback-line">
+                <span class="col s1 italic feedback-date"></span>
+                <span class="col s1 bold feedback-author"></span>
+                <span class="col s1 feedback-grade"></span>
+                <span class="col s3 feedback-comment"></span>
+            </p>
+
+            <p id="modal-user-feedbacks-5" class="row feedback-line">
+                <span class="col s1 italic feedback-date"></span>
+                <span class="col s1 bold feedback-author"></span>
+                <span class="col s1 feedback-grade"></span>
+                <span class="col s3 feedback-comment"></span>
             </p>
         </div>
         <div class="modal-footer">
@@ -71,6 +104,12 @@
             font-size: 35px;
             cursor: pointer;
             margin-left: 20px;
+        }
+        .italic {
+            font-style: italic;
+        }
+        .bold {
+            font-weight: bold;
         }
     </style>
 {% endblock %}
@@ -112,7 +151,19 @@
                         dataType: 'json',
                         success: function (data) {
                             $('#modal-user-username').html(data.content.username);
-                            $('#modal-user-average').html(parseFloat(data.content.average)).toString();
+                            $('#modal-user-average').html(parseFloat(data.content.average) + ' /5');
+
+                            $('.feedback-line').hide();
+
+                            for (var i = 0; i < data.content.feedbacks.length; i++) {
+                                var line = '#modal-user-feedbacks-' + (i + 1);
+                                $(line + ' .feedback-date').html(data.content.feedbacks[i].date);
+                                $(line + ' .feedback-author').html(data.content.feedbacks[i].author);
+                                $(line + ' .feedback-grade').html(data.content.feedbacks[i].grade + ' /5');
+                                $(line + ' .feedback-comment').html(data.content.feedbacks[i].comment);
+                                $(line).show();
+                            }
+
                             $('#modal-user').modal('open');
                         },
                         error: function(xhr, status, error) {
