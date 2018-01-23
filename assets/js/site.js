@@ -6,6 +6,7 @@ $( document ).ready(function() {
     $('.tooltipped').tooltip({delay: 50, position: 'top'});
     $('.modal').modal();
     $('select').material_select();
+    $('.counter').characterCounter();
 });
 
 function datePicker() {

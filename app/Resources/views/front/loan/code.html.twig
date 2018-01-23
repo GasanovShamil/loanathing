@@ -1,0 +1,138 @@
+{% extends 'front/base.html.twig' %}
+
+{% block content %}
+    <h1>Entrer un code</h1>
+
+    <div class="row">
+        <div class="col s6">
+            <h5>Mes annonces ...</h5>
+            <div class="row">
+                <div class="col s6 offset-s2">
+                    <label>Annonce</label>
+                    <select id="my-announces" class="browser-default">
+                        <option value="">Choisir</option>
+                        {% for announce in myAnnounces %}
+                            <option value="{{ announce.id }}">{{ announce.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col s6 offset-s2">
+                    <label>Utilisateur</label>
+                    <select id="users" class="browser-default">
+                        <option value="" class="permanent">Choisir</option>
+                        {% for loan in loansByOwner %}
+                            <optgroup label="{{ loan.applicant.username }}" data-announce="{{ loan.announce.id }}">
+                                <option value="{{ loan.id }}">Du {{ loan.startDate }} au {{ loan.endDate }}</option>
+                            </optgroup>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field col s6 offset-s2">
+                    <input type="text" id="code-owner" class="counter" data-length="10" maxlength="10" />
+                    <label for="code-owner">Code</label>
+                </div>
+                <div class="col s6 offset-s2">
+                    <button id="send-code-owner" class="waves-effect waves-light btn">Envoyer</button>
+                </div>
+            </div>
+        </div>
+        <div class="col s6">
+            <h5>J'ai postulé ...</h5>
+            <div class="row">
+                <div class="col s6 offset-s2">
+                    <label>Annonce</label>
+                    <select id="other-announces" class="browser-default">
+                        <option value="">Choisir</option>
+                        {% for announce in otherAnnounces %}
+                            <option value="{{ announce.id }}">{{ announce.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col s6 offset-s2">
+                    <label>Utilisateur</label>
+                    <select id="my-applies" class="browser-default">
+                        <option value="" class="permanent">Choisir</option>
+                        {% for loan in loansByApplicant %}
+                            <option value="{{ loan.id }}" data-announce="{{ loan.announce.id }}">Du {{ loan.startDate }} au {{ loan.endDate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="input-field col s6 offset-s2">
+                    <input type="text" id="code-applicant" class="counter" data-length="10" maxlength="10" />
+                    <label for="code-applicant">Code</label>
+                </div>
+                <div class="col s6 offset-s2">
+                    <button id="send-code-applicant" class="waves-effect waves-light btn">Envoyer</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+    <style type="text/css">
+    </style>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $( document ).ready(function() {
+            $('#users option:not(.permanent), #users optgroup').hide();
+
+            $('#my-announces').change(function() {
+                $('#users option:not(.permanent), #users optgroup').hide();
+                var selector = '#users optgroup[data-announce="' + $(this).find(':selected').val() + '"]';
+                $(selector + ', ' + selector + ' option').show();
+                $('#users').val('');
+            });
+
+            $('#my-applies option:not(.permanent)').hide();
+
+            $('#other-announces').change(function() {
+                $('#my-applies option:not(.permanent)').hide();
+                $('#my-applies option[data-announce="' + $(this).find(':selected').val() + '"]').show();
+                $('#my-applies').val('');
+            });
+
+            $('#send-code-owner').click(function() {
+                var loan = $('#users').val();
+                var code = $('#code-owner').val();
+
+                if (loan != "" && code.length == 10) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ path('loan_code_owner') }}',
+                        data: { id: loan, code: code },
+                        dataType: 'json',
+                        success: function (data) {
+                            Materialize.toast(data.content, 3000, 'bc-' + data.type);
+                        },
+                        error: function(xhr, status, error) {
+                            Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                        }
+                    });
+                }
+            });
+
+            $('#send-code-applicant').click(function() {
+                var loan = $('#my-applies').val();
+                var code = $('#code-applicant').val();
+
+                if (loan != "" && code.length == 10) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ path('loan_code_applicant') }}',
+                        data: { id: loan, code: code },
+                        dataType: 'json',
+                        success: function (data) {
+                            Materialize.toast(data.content, 3000, 'bc-' + data.type);
+                        },
+                        error: function(xhr, status, error) {
+                            Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

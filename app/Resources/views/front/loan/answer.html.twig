@@ -76,15 +76,13 @@
 {% block javascripts %}
     <script type="text/javascript">
         $( document ).ready(function() {
-            $('.tooltipped').tooltip({delay: 50, position: 'top'});
-            $('.modal').modal();
-
             $('.show-announce').click(function() {
                 var announce = $(this).data('announce');
+
                 if (announce != "") {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ path('loan_announce') }}',
+                        url: '{{ path('loan_answer_announce') }}',
                         data: { id: announce },
                         dataType: 'json',
                         success: function (data) {
@@ -103,10 +101,11 @@
 
             $('.show-user').click(function() {
                 var user = $(this).data('user');
+
                 if (user != "") {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ path('loan_user') }}',
+                        url: '{{ path('loan_answer_user') }}',
                         data: { id: user },
                         dataType: 'json',
                         success: function (data) {
@@ -122,13 +121,13 @@
 
             $('.accept').click(function() {
                 var loan = $(this).data('loan');
-                var url = '{{ path('loan_accept') }}';
+                var url = '{{ path('loan_answer_accept') }}';
                 if (loan != "") answer(loan, url);
             });
 
             $('.refuse').click(function() {
                 var loan = $(this).data('loan');
-                var url = '{{ path('loan_refuse') }}';
+                var url = '{{ path('loan_answer_refuse') }}';
                 if (loan != "") answer(loan, url);
             });
         });

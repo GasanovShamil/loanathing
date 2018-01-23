@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 /**
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="AppBundle\Repository\AnnounceRepository")
  * @ORM\Table(name="Announce")
  * @Vich\Uploadable
  */

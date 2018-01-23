@@ -11,9 +11,8 @@ namespace AppBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="Loan")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\LoanRepository")
+ * @ORM\Table(name="Loan")
  */
 class Loan {
 
@@ -146,6 +145,31 @@ class Loan {
     }
     //endregion
 
+    //region Status
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="status", type="integer")
+     */
+    private $status;
+
+    /**
+     * @return integer
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param integer $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
+    }
+    //endregion
+
     //region OwnerCode
     /**
      * @var string
@@ -168,6 +192,7 @@ class Loan {
     public function setOwnerCode($ownerCode)
     {
         $this->ownerCode = $ownerCode;
+        if ($this->ownerCode == 'OK' && $this->applicantCode == 'OK') $this->status = 2;
     }
     //endregion
 
@@ -193,6 +218,7 @@ class Loan {
     public function setApplicantCode($applicantCode)
     {
         $this->applicantCode = $applicantCode;
+        if ($this->ownerCode == 'OK' && $this->applicantCode == 'OK') $this->status = 2;
     }
     //endregion
 
@@ -202,6 +228,7 @@ class Loan {
         $this->announce = null;
         $this->startDate = '';
         $this->endDate = '';
+        $this->status = 0;
         $this->ownerCode = '';
         $this->applicantCode = '';
     }
