@@ -69,7 +69,9 @@ swiftmailer:
     host: '%mailer_host%'
     username: '%mailer_user%'
     password: '%mailer_password%'
-    spool: { type: memory }
+    auth_mode: login
+    port: 465
+    encryption: ssl
 
 fos_user:
     db_driver: orm # other valid values are 'mongodb' and 'couchdb'

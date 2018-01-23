@@ -191,35 +191,35 @@ class LoanController extends BaseController
 
                 $em->flush();
 
-                $mailer->send(
-                    (new \Swift_Message('Vous avez un match !'))
-                        ->setFrom('loanathing@gmail.com')
-                        ->setTo($loan->getAnnounce()->getOwner()->getEmail())
-                        ->setBody(
-                            $this->renderView('email/match.html.twig', array(
-                                    'name' => $loan->getAnnounce()->getOwner()->getUsername(),
-                                    'announce' => $loan->getAnnounce()->getName(),
-                                    'match' => $loan->getApplicant()->getUsername(),
-                                    'email' => $loan->getApplicant()->getEmail(),
-                                    'code' => $loan->getOwnerCode()
-                                )
-                            ), 'text/html')
-                );
-
-                $mailer->send(
-                    (new \Swift_Message('Vous avez un match !'))
-                        ->setFrom('loanathing@gmail.com')
-                        ->setTo($loan->getApplicant()->getEmail())
-                        ->setBody(
-                            $this->renderView('email/match.html.twig', array(
-                                    'name' => $loan->getApplicant()->getUsername(),
-                                    'announce' => $loan->getAnnounce()->getName(),
-                                    'match' => $loan->getAnnounce()->getOwner()->getUsername(),
-                                    'email' => $loan->getAnnounce()->getOwner()->getEmail(),
-                                    'code' => $loan->getApplicantCode()
-                                )
-                            ), 'text/html')
-                );
+//                $mailer->send(
+//                    (new \Swift_Message('Vous avez un match !'))
+//                        ->setFrom('loanathing@gmail.com')
+//                        ->setTo($loan->getAnnounce()->getOwner()->getEmail())
+//                        ->setBody(
+//                            $this->renderView('email/match.html.twig', array(
+//                                    'name' => $loan->getAnnounce()->getOwner()->getUsername(),
+//                                    'announce' => $loan->getAnnounce()->getName(),
+//                                    'match' => $loan->getApplicant()->getUsername(),
+//                                    'email' => $loan->getApplicant()->getEmail(),
+//                                    'code' => $loan->getOwnerCode()
+//                                )
+//                            ), 'text/html')
+//                );
+//
+//                $mailer->send(
+//                    (new \Swift_Message('Vous avez un match !'))
+//                        ->setFrom('loanathing@gmail.com')
+//                        ->setTo($loan->getApplicant()->getEmail())
+//                        ->setBody(
+//                            $this->renderView('email/match.html.twig', array(
+//                                    'name' => $loan->getApplicant()->getUsername(),
+//                                    'announce' => $loan->getAnnounce()->getName(),
+//                                    'match' => $loan->getAnnounce()->getOwner()->getUsername(),
+//                                    'email' => $loan->getAnnounce()->getOwner()->getEmail(),
+//                                    'code' => $loan->getApplicantCode()
+//                                )
+//                            ), 'text/html')
+//                );
 
                 return new JsonResponse(array('type' => 'success', 'content' => 'Demande acceptée'));
             }
