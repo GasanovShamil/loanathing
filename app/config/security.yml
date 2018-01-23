@@ -30,4 +30,5 @@ security:
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/announce, role: ROLE_USER }
         - { path: ^/loan, role: ROLE_USER }
+        - { path: ^/feedback, role: ROLE_USER }
         - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -19,6 +19,7 @@
                         <li><a href="{{ path('announce_index') }}">Annonces</a></li>
                         <li><a href="{{ path('loan_answer') }}">Demandes</a></li>
                         <li><a href="{{ path('loan_code') }}">Codes</a></li>
+                        <li><a href="{{ path('feedback_index') }}">Commentaires</a></li>
                         {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                                 {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
                                 <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>

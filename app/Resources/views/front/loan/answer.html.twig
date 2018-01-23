@@ -83,7 +83,7 @@
                     $.ajax({
                         type: 'POST',
                         url: '{{ path('loan_answer_announce') }}',
-                        data: { id: announce },
+                        data: { announce: announce },
                         dataType: 'json',
                         success: function (data) {
                             $('#modal-announce-name').html(data.content.name);
@@ -106,7 +106,7 @@
                     $.ajax({
                         type: 'POST',
                         url: '{{ path('loan_answer_user') }}',
-                        data: { id: user },
+                        data: { user: user },
                         dataType: 'json',
                         success: function (data) {
                             $('#modal-user-username').html(data.content.username);
@@ -121,31 +121,43 @@
 
             $('.accept').click(function() {
                 var loan = $(this).data('loan');
-                var url = '{{ path('loan_answer_accept') }}';
-                if (loan != "") answer(loan, url);
+
+                if (loan != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ path('loan_answer_accept') }}',
+                        data: { loan: loan },
+                        dataType: 'json',
+                        success: function (data) {
+                            Materialize.toast(data.content, 3000, 'bc-' + data.type);
+                            $('#line-' + id).remove();
+                        },
+                        error: function(xhr, status, error) {
+                            Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                        }
+                    });
+                }
             });
 
             $('.refuse').click(function() {
                 var loan = $(this).data('loan');
-                var url = '{{ path('loan_answer_refuse') }}';
-                if (loan != "") answer(loan, url);
-            });
-        });
 
-        function answer(id, url) {
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: { id: id },
-                dataType: 'json',
-                success: function (data) {
-                    Materialize.toast(data.content, 3000, 'bc-' + data.type);
-                    $('#line-' + id).remove();
-                },
-                error: function(xhr, status, error) {
-                    Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                if (loan != "") {
+                    $.ajax({
+                        type: 'POST',
+                        url: '{{ path('loan_answer_refuse') }}',
+                        data: { loan: loan },
+                        dataType: 'json',
+                        success: function (data) {
+                            Materialize.toast(data.content, 3000, 'bc-' + data.type);
+                            $('#line-' + id).remove();
+                        },
+                        error: function(xhr, status, error) {
+                            Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                        }
+                    });
                 }
             });
-        }
+        });
     </script>
 {% endblock %}
