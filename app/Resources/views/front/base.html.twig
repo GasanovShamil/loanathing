@@ -14,20 +14,17 @@
         {% block navbar %}
             <nav class="red darken-1">
                 <div class="nav-wrapper">
-                    <a href="{{ path('frontHomepage') }}" class="brand-logo">Loan a thing</a>
+                    <a href="{{ path('frontHomepage') }}" class="brand-logo center">Loan a thing</a>
                     <ul id="nav-mobile" class="right hide-on-med-and-down">
                         <li><a href="{{ path('announce_index') }}">Annonces</a></li>
                         <li><a href="{{ path('loan_answer') }}">Demandes</a></li>
                         <li><a href="{{ path('loan_code') }}">Codes</a></li>
                         <li><a href="{{ path('feedback_index') }}">Commentaires</a></li>
-                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
-                                {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
-                                <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
-                            {% else %}
-                                <li><a href="{{ path('fos_user_security_login') }}">Se connecter</a></li>
-                            {% endif %}
-                            {% if not app.user %}   
-                                <li><a href="{{ path('fos_user_registration_register') }}">S'inscrire</a></li>
+                        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") or app.user %}
+                            <li><a href="{{ path('fos_user_security_logout') }}">Se déconnecter</a></li>
+                        {% else %}
+                            <li><a href="{{ path('fos_user_security_login') }}">Se connecter</a></li>
+                            <li><a href="{{ path('fos_user_registration_register') }}">S'inscrire</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -40,6 +37,17 @@
             {% block content %}{% endblock %}
         </div>
 
+        {% if is_granted("IS_AUTHENTICATED_REMEMBERED") or app.user %}
+            <ul class="side-nav fixed" id="notifications">
+                <li>Notifications</li>
+                {% for notification in notifications %}
+                    <li id="notification-{{ notification.id }}" class="hoverable {% if notification.isNew %} notification-new{% endif %}" data-notification="{{ notification.id }}">
+                        {{ notification.content }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <script type="text/javascript">var notificationPath = '{{ path('notification_read') }}'</script>
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/materialize.min.js"></script>
         <script type="text/javascript" src="{{ app.request.getBaseURL() }}/../../assets/js/site.js"></script>

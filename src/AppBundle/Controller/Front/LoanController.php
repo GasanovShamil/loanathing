@@ -5,9 +5,9 @@ namespace AppBundle\Controller\Front;
 use AppBundle\Entity\Announce;
 use AppBundle\Entity\Feedback;
 use AppBundle\Entity\Loan;
+use AppBundle\Entity\Notification;
 use AppBundle\Entity\User;
 use AppBundle\Service\Library;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -18,9 +18,8 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Route("loan")
  */
-class LoanController extends Controller
+class LoanController extends BaseController
 {
-
     /**
      * Apply to an announce
      *
@@ -43,11 +42,17 @@ class LoanController extends Controller
 
                 if ($library->canApplyDates($announce, $start, $end)) {
                     $loan = new Loan();
-                    $loan->setApplicant($this->get('security.token_storage')->getToken()->getUser());
+                    $loan->setApplicant($this->getCurrentUser());
                     $loan->setAnnounce($announce);
                     $loan->setStartDate($start);
                     $loan->setEndDate($end);
                     $em->persist($loan);
+
+                    $notification = new Notification();
+                    $notification->setUser($announce->getOwner());
+                    $notification->setContent('Nouveau candidat');
+                    $em->persist($notification);
+
                     $em->flush();
 
                     return new JsonResponse(array('type' => 'success', 'content' => 'Votre demande est envoyée'));
@@ -70,12 +75,12 @@ class LoanController extends Controller
      */
     public function answerAction(Request $request)
     {
-        $loans = $this->getDoctrine()
-            ->getManager()
-            ->getRepository(Loan::class)
-            ->findLoansByOwner($this->get('security.token_storage')->getToken()->getUser(), 0);
+        $em = $this->getDoctrine()->getManager();
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
+        $loans = $em->getRepository(Loan::class)->findLoansByOwner($this->getCurrentUser(), 0);
 
         return $this->render('front/loan/answer.html.twig', array(
+            'notifications' => $notifications,
             'loans' => $loans
         ));
     }
@@ -162,7 +167,7 @@ class LoanController extends Controller
      * @Route("/answer/accept", name="loan_answer_accept")
      * @Method("POST")
      */
-    public function acceptAction(Request $request, Library $library)
+    public function acceptAction(Request $request, Library $library, \Swift_Mailer $mailer)
     {
         if ($request->isXmlHttpRequest()) {
             $loan = $request->get('loan');
@@ -178,10 +183,45 @@ class LoanController extends Controller
                 $loan->setApplicantCode($library->generateCode());
                 $loan->setStatus(1);
                 $em->persist($loan);
+
+                $notification = new Notification();
+                $notification->setUser($loan->getApplicant());
+                $notification->setContent('Demande acceptée');
+                $em->persist($notification);
+
                 $em->flush();
 
-                return new JsonResponse(array('type' => 'success', 'content' => 'Demande acceptée'));
+                $mailer->send(
+                    (new \Swift_Message('Vous avez un match !'))
+                        ->setFrom('loanathing@gmail.com')
+                        ->setTo($loan->getAnnounce()->getOwner()->getEmail())
+                        ->setBody(
+                            $this->renderView('email/match.html.twig', array(
+                                    'name' => $loan->getAnnounce()->getOwner()->getUsername(),
+                                    'announce' => $loan->getAnnounce()->getName(),
+                                    'match' => $loan->getApplicant()->getUsername(),
+                                    'email' => $loan->getApplicant()->getEmail(),
+                                    'code' => $loan->getOwnerCode()
+                                )
+                            ), 'text/html')
+                );
 
+                $mailer->send(
+                    (new \Swift_Message('Vous avez un match !'))
+                        ->setFrom('loanathing@gmail.com')
+                        ->setTo($loan->getApplicant()->getEmail())
+                        ->setBody(
+                            $this->renderView('email/match.html.twig', array(
+                                    'name' => $loan->getApplicant()->getUsername(),
+                                    'announce' => $loan->getAnnounce()->getName(),
+                                    'match' => $loan->getAnnounce()->getOwner()->getUsername(),
+                                    'email' => $loan->getAnnounce()->getOwner()->getEmail(),
+                                    'code' => $loan->getApplicantCode()
+                                )
+                            ), 'text/html')
+                );
+
+                return new JsonResponse(array('type' => 'success', 'content' => 'Demande acceptée'));
             }
 
             return new JsonResponse(array('type' => 'error', 'content' => 'Données invalides'));
@@ -209,6 +249,12 @@ class LoanController extends Controller
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune demande trouvée'));
 
                 $em->remove($loan);
+
+                $notification = new Notification();
+                $notification->setUser($loan->getApplicant());
+                $notification->setContent('Demande refusée');
+                $em->persist($notification);
+
                 $em->flush();
 
                 return new JsonResponse(array('type' => 'success', 'content' => 'Demande refusée'));
@@ -229,15 +275,16 @@ class LoanController extends Controller
      */
     public function codeAction(Request $request)
     {
-        $currentUser = $this->get('security.token_storage')->getToken()->getUser();
         $status = 1;
         $em = $this->getDoctrine()->getManager();
-        $myAnnounces = $em->getRepository(Announce::class)->findAnnouncesByOwner($currentUser, $status);
-        $loansByOwner = $em->getRepository(Loan::class)->findLoansByOwner($currentUser, $status);
-        $otherAnnounces = $em->getRepository(Announce::class)->findAnnouncesByApplicant($currentUser, $status);
-        $loansByApplicant = $em->getRepository(Loan::class)->findLoansByApplicant($currentUser, $status);
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
+        $myAnnounces = $em->getRepository(Announce::class)->findAnnouncesByOwner($this->getCurrentUser(), $status);
+        $loansByOwner = $em->getRepository(Loan::class)->findLoansByOwner($this->getCurrentUser(), $status);
+        $otherAnnounces = $em->getRepository(Announce::class)->findAnnouncesByApplicant($this->getCurrentUser(), $status);
+        $loansByApplicant = $em->getRepository(Loan::class)->findLoansByApplicant($this->getCurrentUser(), $status);
 
         return $this->render('front/loan/code.html.twig', array(
+            'notifications' => $notifications,
             'myAnnounces' => $myAnnounces,
             'loansByOwner' => $loansByOwner,
             'otherAnnounces' => $otherAnnounces,
@@ -272,6 +319,12 @@ class LoanController extends Controller
 
                 $loan->setOwnerCode('OK');
                 $em->persist($loan);
+
+                $notification = new Notification();
+                $notification->setUser($loan->getApplicant());
+                $notification->setContent('Code rentré');
+                $em->persist($notification);
+
                 $em->flush();
 
                 return new JsonResponse(array('type' => 'success', 'content' => 'Code rentré'));
@@ -310,6 +363,12 @@ class LoanController extends Controller
 
                 $loan->setApplicantCode('OK');
                 $em->persist($loan);
+
+                $notification = new Notification();
+                $notification->setUser($loan->getAnnounce()->getOwner());
+                $notification->setContent('Code rentré');
+                $em->persist($notification);
+
                 $em->flush();
 
                 return new JsonResponse(array('type' => 'success', 'content' => 'Code rentré'));

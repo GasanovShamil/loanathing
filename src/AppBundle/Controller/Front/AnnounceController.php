@@ -3,7 +3,7 @@
 namespace AppBundle\Controller\Front;
 
 use AppBundle\Entity\Announce;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use AppBundle\Entity\Notification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
  *
  * @Route("announce")
  */
-class AnnounceController extends Controller
+class AnnounceController extends BaseController
 {
     /**
      * Lists all announce entities.
@@ -24,11 +24,12 @@ class AnnounceController extends Controller
     public function indexAction()
     {
         $em = $this->getDoctrine()->getManager();
-
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
         $announces = $em->getRepository(Announce::class)->findAll();
 
         return $this->render('front/announce/index.html.twig', array(
-            'announces' => $announces,
+            'notifications' => $notifications,
+            'announces' => $announces
         ));
     }
 
@@ -40,13 +41,15 @@ class AnnounceController extends Controller
      */
     public function newAction(Request $request)
     {
+        $em = $this->getDoctrine()->getManager();
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
+
         $announce = new Announce();
         $form = $this->createForm('AppBundle\Form\AnnounceType', $announce);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $announce->setOwner($this->get('security.token_storage')->getToken()->getUser());
-            $em = $this->getDoctrine()->getManager();
             $em->persist($announce);
             $em->flush();
 
@@ -54,6 +57,7 @@ class AnnounceController extends Controller
         }
 
         return $this->render('front/announce/new.html.twig', array(
+            'notifications' => $notifications,
             'announce' => $announce,
             'form' => $form->createView(),
         ));
@@ -67,9 +71,12 @@ class AnnounceController extends Controller
      */
     public function showAction(Announce $announce)
     {
+        $em = $this->getDoctrine()->getManager();
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
         $deleteForm = $this->createDeleteForm($announce);
 
         return $this->render('front/announce/show.html.twig', array(
+            'notifications' => $notifications,
             'announce' => $announce,
             'delete_form' => $deleteForm->createView(),
         ));
@@ -83,17 +90,20 @@ class AnnounceController extends Controller
      */
     public function editAction(Request $request, Announce $announce)
     {
+        $em = $this->getDoctrine()->getManager();
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
         $deleteForm = $this->createDeleteForm($announce);
         $editForm = $this->createForm('AppBundle\Form\AnnounceType', $announce);
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $em->flush();
 
             return $this->redirectToRoute('announce_edit', array('id' => $announce->getId()));
         }
 
         return $this->render('front/announce/edit.html.twig', array(
+            'notifications' => $notifications,
             'announce' => $announce,
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),

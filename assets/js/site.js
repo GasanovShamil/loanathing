@@ -7,6 +7,26 @@ $( document ).ready(function() {
     $('.modal').modal();
     $('select').material_select();
     $('.counter').characterCounter();
+
+    $('.notification-new').click(function() {
+        var notification = $(this).data('notification');
+
+        if (notification != '') {
+            $.ajax({
+                type: 'POST',
+                url: notificationPath,
+                data: { notification: notification },
+                dataType: 'json',
+                success: function (data) {
+                    if (data.type == 'success') $('#notification-' + notification).removeClass('notification-new');
+                    else Materialize.toast(data.content, 3000, 'bc-' + data.type);
+                },
+                error: function(xhr, status, error) {
+                    Materialize.toast(xhr.responseText, 3000, 'toast-error');
+                }
+            });
+        }
+    });
 });
 
 function datePicker() {

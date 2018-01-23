@@ -34,7 +34,7 @@
     <div id="modal-announce" class="modal bottom-sheet">
         <div class="modal-content">
             <h4 id="modal-announce-name"></h4>
-            <span id="modal-announce-dates"></span>
+            <span id="modal-announce-dates" class="italic"></span>
             <p class="row">
                 <div class="col s3">
                     <img id="modal-announce-image" src="" />
@@ -97,9 +97,6 @@
 
 {% block stylesheets %}
     <style type="text/css">
-        #modal-announce-dates {
-            font-style: italic;
-        }
         .fa {
             font-size: 35px;
             cursor: pointer;
@@ -184,7 +181,7 @@
                         dataType: 'json',
                         success: function (data) {
                             Materialize.toast(data.content, 3000, 'bc-' + data.type);
-                            $('#line-' + id).remove();
+                            $('#line-' + loan).remove();
                         },
                         error: function(xhr, status, error) {
                             Materialize.toast(xhr.responseText, 3000, 'toast-error');
@@ -204,7 +201,7 @@
                         dataType: 'json',
                         success: function (data) {
                             Materialize.toast(data.content, 3000, 'bc-' + data.type);
-                            $('#line-' + id).remove();
+                            $('#line-' + loan).remove();
                         },
                         error: function(xhr, status, error) {
                             Materialize.toast(xhr.responseText, 3000, 'toast-error');

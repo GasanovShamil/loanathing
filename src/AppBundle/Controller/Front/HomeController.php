@@ -2,18 +2,22 @@
 
 namespace AppBundle\Controller\Front;
 
+use AppBundle\Entity\Notification;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class HomeController extends Controller
+class HomeController extends BaseController
 {
     /**
      * @Route("/", name="frontHomepage")
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('front/home/index.html.twig');
+        $em = $this->getDoctrine()->getManager();
+        $notifications = $em->getRepository(Notification::class)->findNotificationsByUser($this->getCurrentUser());
+
+        return $this->render('front/home/index.html.twig', array(
+            'notifications' => $notifications
+        ));
     }
 }

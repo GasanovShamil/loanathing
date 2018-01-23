@@ -1,3 +1,28 @@
+.side-nav {
+    width: 230px;
+}
+.side-nav li {
+    color: rgba(0,0,0,0.87);
+    display: block;
+    font-size: 14px;
+    font-weight: 500;
+    height: 48px;
+    line-height: 48px;
+    padding: 0 32px;
+}
+.side-nav li:not(:first-child) {
+    cursor: pointer;
+}
+.side-nav li:not(:first-child):hover {
+    background-color: #F5F5F5;
+}
+.side-nav .notification-new {
+    color: #FFFFFF;
+    background-color: #EE2200;
+}
+.side-nav .notification-new:hover {
+    background-color: #8B1014!important;
+}
 .bc-success {
     background-color: #2E7D32;
 }
@@ -8,7 +33,7 @@
     background-color: #D32F2F;
 }
 .c-success {
-   color: #2E7D32;
+    color: #2E7D32;
 }
 .c-warning {
     color: #F4B400;
@@ -18,7 +43,7 @@
 }
 
 body {
-	background-color: #f5f5f5 !important;
+    background-color: #f5f5f5 !important;
 }
 
 

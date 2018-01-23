@@ -93,7 +93,7 @@
                 var loan = $('#users').val();
                 var code = $('#code-owner').val();
 
-                if (loan != "" && code.length == 10) {
+                if (loan != '' && code.length == 10) {
                     $.ajax({
                         type: 'POST',
                         url: '{{ path('loan_code_owner') }}',
