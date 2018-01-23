@@ -95,6 +95,32 @@ class Feedback {
 
     //endregion
 
+    //region Loan
+    /**
+     * @var integer
+     *
+     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Loan", inversedBy="feedbacks")
+     * @ORM\JoinColumn(name="loan", referencedColumnName="id")
+     */
+    private $loan;
+
+    /**
+     * @return int
+     */
+    public function getLoan()
+    {
+        return $this->loan;
+    }
+
+    /**
+     * @param int $loan
+     */
+    public function setLoan($loan)
+    {
+        $this->loan = $loan;
+    }
+    //endregion
+
     //region Grade
     /**
      * @var float
@@ -149,6 +175,7 @@ class Feedback {
         $this->id = 0;
         $this->author = null;
         $this->target = null;
+        $this->loan = null;
         $this->grade = null;
         $this->comment = '';
     }

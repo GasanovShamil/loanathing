@@ -88,10 +88,10 @@ class LoanController extends Controller
     public function announceAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
+            $announce = $request->get('announce');
 
-            if ($id != '') {
-                $announce = $this->getDoctrine()->getManager()->getRepository(Announce::class)->find($id);
+            if ($announce != '') {
+                $announce = $this->getDoctrine()->getManager()->getRepository(Announce::class)->find($announce);
 
                 if (!$announce)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune annonce trouvée'));
@@ -119,10 +119,10 @@ class LoanController extends Controller
     public function userAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
+            $user = $request->get('user');
 
-            if ($id != '') {
-                $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($id);
+            if ($user != '') {
+                $user = $this->getDoctrine()->getManager()->getRepository(User::class)->find($user);
 
                 if (!$user)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune utilisateur trouvé'));
@@ -147,11 +147,11 @@ class LoanController extends Controller
     public function acceptAction(Request $request, Library $library)
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
+            $loan = $request->get('loan');
 
-            if ($id != '') {
+            if ($loan != '') {
                 $em = $this->getDoctrine()->getManager();
-                $loan = $em->getRepository(Loan::class)->find($id);
+                $loan = $em->getRepository(Loan::class)->find($loan);
 
                 if (!$loan)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune demande trouvée'));
@@ -181,11 +181,11 @@ class LoanController extends Controller
     public function refuseAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
+            $loan = $request->get('loan');
 
-            if ($id != '') {
+            if ($loan != '') {
                 $em = $this->getDoctrine()->getManager();
-                $loan = $em->getRepository(Loan::class)->find($id);
+                $loan = $em->getRepository(Loan::class)->find($loan);
 
                 if (!$loan)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune demande trouvée'));
@@ -212,11 +212,12 @@ class LoanController extends Controller
     public function codeAction(Request $request)
     {
         $currentUser = $this->get('security.token_storage')->getToken()->getUser();
+        $status = 1;
         $em = $this->getDoctrine()->getManager();
-        $myAnnounces = $em->getRepository(Announce::class)->findAnnouncesByOwner($currentUser, 1);
-        $loansByOwner = $em->getRepository(Loan::class)->findLoansByOwner($currentUser, 1);
-        $otherAnnounces = $em->getRepository(Announce::class)->findAnnouncesByApplicant($currentUser, 1);
-        $loansByApplicant = $em->getRepository(Loan::class)->findLoansByApplicant($currentUser, 1);
+        $myAnnounces = $em->getRepository(Announce::class)->findAnnouncesByOwner($currentUser, $status);
+        $loansByOwner = $em->getRepository(Loan::class)->findLoansByOwner($currentUser, $status);
+        $otherAnnounces = $em->getRepository(Announce::class)->findAnnouncesByApplicant($currentUser, $status);
+        $loansByApplicant = $em->getRepository(Loan::class)->findLoansByApplicant($currentUser, $status);
 
         return $this->render('front/loan/code.html.twig', array(
             'myAnnounces' => $myAnnounces,
@@ -235,12 +236,12 @@ class LoanController extends Controller
     public function ownerAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
+            $loan = $request->get('loan');
             $code = $request->get('code');
 
-            if ($id != '' && strlen($code) == 10) {
+            if ($loan != '' && strlen($code) == 10) {
                 $em = $this->getDoctrine()->getManager();
-                $loan = $em->getRepository(Loan::class)->find($id);
+                $loan = $em->getRepository(Loan::class)->find($loan);
 
                 if (!$loan)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune demande trouvée'));
@@ -273,12 +274,12 @@ class LoanController extends Controller
     public function applicantAction(Request $request)
     {
         if ($request->isXmlHttpRequest()) {
-            $id = $request->get('id');
+            $loan = $request->get('loan');
             $code = $request->get('code');
 
-            if ($id != '' && strlen($code) == 10) {
+            if ($loan != '' && strlen($code) == 10) {
                 $em = $this->getDoctrine()->getManager();
-                $loan = $em->getRepository(Loan::class)->find($id);
+                $loan = $em->getRepository(Loan::class)->find($loan);
 
                 if (!$loan)
                     return new JsonResponse(array('type' => 'error', 'content' => 'Aucune demande trouvée'));

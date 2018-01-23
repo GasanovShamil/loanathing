@@ -8,6 +8,7 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -222,6 +223,13 @@ class Loan {
     }
     //endregion
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Feedback", mappedBy="loan")
+     */
+    private $feedbacks;
+
     public function __construct() {
         $this->id = 0;
         $this->applicant = null;
@@ -231,5 +239,6 @@ class Loan {
         $this->status = 0;
         $this->ownerCode = '';
         $this->applicantCode = '';
+        $this->feedbacks = new ArrayCollection();
     }
 }

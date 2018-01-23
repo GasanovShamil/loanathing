@@ -1,7 +1,7 @@
 {% extends 'front/base.html.twig' %}
 
 {% block content %}
-    <h1>Entrer un code</h1>
+    <h1>Laisser un commentaire</h1>
 
     <div class="row">
         <div class="col s6">
@@ -22,17 +22,26 @@
                         <option value="" class="permanent">Choisir</option>
                         {% for loan in loansByOwner %}
                             <optgroup label="{{ loan.applicant.username }}" data-announce="{{ loan.announce.id }}">
-                                <option value="{{ loan.id }}">Du {{ loan.startDate }} au {{ loan.endDate }}</option>
+                                <option value="{{ loan.applicant.id }}" data-loan="{{ loan.id }}">Du {{ loan.startDate }} au {{ loan.endDate }}</option>
                             </optgroup>
                         {% endfor %}
                     </select>
                 </div>
+                <div class="col s6 offset-s2">
+                    <label>Note</label>
+                    <select id="feedback-owner-grade" class="browser-default">
+                        <option value="" class="permanent">Choisir</option>
+                        {% for i in 0..5 %}
+                            <option value="{{ i }}">{{ i }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 <div class="input-field col s6 offset-s2">
-                    <input type="text" id="code-owner" class="counter" data-length="10" maxlength="10" />
-                    <label for="code-owner">Code</label>
+                    <textarea id="feedback-owner-content" class="materialize-textarea"></textarea>
+                    <label for="feedback-owner-content">Message</label>
                 </div>
                 <div class="col s6 offset-s2">
-                    <button id="send-code-owner" class="waves-effect waves-light btn">Envoyer</button>
+                    <button id="send-feedback-owner" class="waves-effect waves-light btn">Envoyer</button>
                 </div>
             </div>
         </div>
@@ -53,16 +62,25 @@
                     <select id="my-applies" class="browser-default">
                         <option value="" class="permanent">Choisir</option>
                         {% for loan in loansByApplicant %}
-                            <option value="{{ loan.id }}" data-announce="{{ loan.announce.id }}">Du {{ loan.startDate }} au {{ loan.endDate }}</option>
+                            <option value="{{ loan.announce.owner.id }}" data-announce="{{ loan.announce.id }}" data-loan="{{ loan.id }}">Du {{ loan.startDate }} au {{ loan.endDate }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col s6 offset-s2">
+                    <label>Note</label>
+                    <select id="feedback-applicant-grade" class="browser-default">
+                        <option value="" class="permanent">Choisir</option>
+                        {% for i in 0..5 %}
+                            <option value="{{ i }}">{{ i }}</option>
                         {% endfor %}
                     </select>
                 </div>
                 <div class="input-field col s6 offset-s2">
-                    <input type="text" id="code-applicant" class="counter" data-length="10" maxlength="10" />
-                    <label for="code-applicant">Code</label>
+                    <textarea id="feedback-applicant-content" class="materialize-textarea"></textarea>
+                    <label for="feedback-applicant-content">Message</label>
                 </div>
                 <div class="col s6 offset-s2">
-                    <button id="send-code-applicant" class="waves-effect waves-light btn">Envoyer</button>
+                    <button id="send-feedback-applicant" class="waves-effect waves-light btn">Envoyer</button>
                 </div>
             </div>
         </div>
@@ -89,15 +107,17 @@
                 $('#my-applies').val('');
             });
 
-            $('#send-code-owner').click(function() {
-                var loan = $('#users').val();
-                var code = $('#code-owner').val();
+            $('#send-feedback-owner').click(function() {
+                var user = $('#users').val();
+                var grade = $('#feedback-owner-grade').val();
+                var content = $('#feedback-owner-content').val();
+                var loan = $('#users').find(':selected').data('loan')
 
-                if (loan != "" && code.length == 10) {
+                if (user != "" && grade != "" && content != "" && loan != "") {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ path('loan_code_owner') }}',
-                        data: { id: loan, code: code },
+                        url: '{{ path('feedback_comment') }}',
+                        data: { user: user, grade: grade, content: content, loan: loan },
                         dataType: 'json',
                         success: function (data) {
                             Materialize.toast(data.content, 3000, 'bc-' + data.type);
@@ -109,15 +129,17 @@
                 }
             });
 
-            $('#send-code-applicant').click(function() {
-                var loan = $('#my-applies').val();
-                var code = $('#code-applicant').val();
+            $('#send-feedback-applicant').click(function() {
+                var user = $('#my-applies').val();
+                var grade = $('#feedback-applicant-grade').val();
+                var content = $('#feedback-applicant-content').val();
+                var loan = $('#my-applies').find(':selected').data('loan')
 
-                if (loan != "" && code.length == 10) {
+                if (user != "" && grade != "" && content != "" && loan != "") {
                     $.ajax({
                         type: 'POST',
-                        url: '{{ path('loan_code_applicant') }}',
-                        data: { id: loan, code: code },
+                        url: '{{ path('feedback_comment') }}',
+                        data: { user: user, grade: grade, content: content, loan: loan },
                         dataType: 'json',
                         success: function (data) {
                             Materialize.toast(data.content, 3000, 'bc-' + data.type);
