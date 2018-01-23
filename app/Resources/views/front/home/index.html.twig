@@ -1,5 +1,49 @@
 {% extends 'front/base.html.twig' %}
 
+{% block intro %}
+<div id="intro-case">
+	<div class="col s7 white-text center-align" id="home-case">
+		<h4><br/>
+			Bienvenue sur Loan a thing 
+			{% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+			{{app.user.username}} {% endif %}
+		</h4>
+    </div>
+</div>
+{% endblock %}
+
 {% block content %}
-    CONTENT
+    <div class="row ">
+    	<div class="col s6 white z-depth-3 home-case">
+    		<h5>
+    			Notre objectif !
+    		</h5>
+    		<hr />
+    		<span> Loan a thing est une plateforme d'annonces de prêts de biens et de services à but non lucratif. À travers elle, vous pourrez retrouver tous les objets que vous désirez. Des usagers du quotidien mettent à disposition de la communauté leurs biens afin de pouvoir en bénéficier sans débourser le moindre sous ! Alors n'hésitez pas et rejoignez-nous !</span>
+    	</div>
+    	<div class="col s5 white z-depth-3 home-case">
+    		<h5> Notre équipe </h5>
+    		<hr />
+    		<span> L'équipe de Loan a thing est composée de 4 étudiants en 5ème année de Master à l'école ESGI. Nous sommes passionnés d'informatique et avons décidé de créer ce site pour faciliter (un peu) le quotidien de nos utilisateurs :)</span>
+    	</div>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style type="text/css">
+	.home-case{ 
+		margin: 5px;
+		margin-top: 1.5%;
+		padding: 1%;
+		min-height: 189px !important;
+	}
+
+	#intro-case{
+		background-image: url('{{ app.request.getBaseURL() }}/../../assets/img/home/commu.jpg');
+		background-size: contain;
+		background-repeat: no-repeat;
+		width: 100%;
+		min-height: 450px;
+	}
+</style>
 {% endblock %}
